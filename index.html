@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skrining Spiritual Abuse</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✝</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="p-0 m-0">
+
+<div class="relative z-10 min-h-screen flex flex-col justify-between">
+
+  <header class="no-print sticky top-0 z-30 w-full px-4 py-3 border-b border-[var(--line)] bg-[var(--card)] backdrop-blur-md">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <h1 class="font-fraunces text-xl font-bold tracking-tight text-[var(--ink)] flex items-center gap-2">
+          <span id="headerClock">00:00:00</span>
+          <span class="text-xs font-normal text-[var(--muted)] font-manrope hidden sm:inline" id="headerDate"></span>
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="themeToggleBtn" class="gear-btn" title="Ganti Mode Tampilan (Terang/Gelap)">
+          <svg class="w-5 h-5 stroke-[var(--ink)] fill-none" viewBox="0 0 24 24" stroke-width="1.8">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <button id="resetFormBtn" class="px-3 py-2 text-xs font-bold rounded-lg border border-[var(--line)] text-[var(--muted)] hover:text-red-500 hover:border-red-500 transition-colors">
+        RESET SEMUA PILIHAN
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div id="heroBanner" class="max-w-5xl mx-auto w-full px-4 pt-8 pb-4">
+    <div class="glass-card p-6 sm:p-8 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h2 class="font-fraunces text-3xl sm:text-4xl font-semibold mb-3">Form Skrining Risiko Spiritual Abuse</h2>
+          <p class="text-sm text-[var(--muted)] leading-relaxed max-w-2xl">
+            Tujuan formulir ini adalah membantu Anda mengenali pola dan perilaku dalam kelompok/gereja yang membatasi kebebasan, menggunakan tekanan spiritual, atau merusak akuntabilitas. 
+          </p>
+          <p class="mt-2"><strong class="text-[var(--ink)]">NOTE: Ini bukan alat diagnosis medis/hukum.</strong></p>
+        </div>
+
+        <div class="bg-[var(--paper-2)] p-4 rounded-xl border border-[var(--line)] min-w-[220px] flex flex-col justify-center">
+          <div class="flex justify-between text-xs font-bold mb-1">
+            <span>Terjawab:</span>
+            <span id="answeredCountText" class="font-mono text-[var(--gold)]">0 / 103</span>
+          </div>
+          <div class="w-full bg-black/10 rounded-full h-2.5 overflow-hidden mb-2">
+            <div id="topProgressBar" class="progress-fill bg-[var(--gold)] h-full w-0"></div>
+          </div>
+          <div class="text-[11px] text-[var(--muted)] flex justify-between">
+            <span>Substantif: <strong id="substantiveCountText" class="text-[var(--ink)]">0</strong></span>
+            <span>Non-substantif: <strong id="nonSubstantiveCountText" class="text-[var(--ink)]">0</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-[var(--line)]">
+        <label class="block text-xs font-bold uppercase tracking-wider text-[var(--muted)] mb-3">
+        Aliran Gereja
+        </label>
+        <div class="flex flex-wrap gap-2" id="aliranPillsContainer">
+        </div>
+      </div>
+    </div>
+
+    <div class="no-print overflow-x-auto pb-2 mb-6 flex gap-2 scrollbar-none" id="sectionTabs">
+
+    </div>
+
+    <div id="redAlertBanner" class="hidden glass-card red-alert-card border-rose-500 bg-rose-950/20 p-5 mb-6 text-rose-200">
+      <div class="flex items-start gap-4">
+        <div class="p-2 bg-rose-600 text-white rounded-lg flex-shrink-0">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-rose-500 font-fraunces">RED ALERT DETECTED</h3>
+          <p class="text-xs sm:text-sm mt-1 leading-relaxed opacity-90">
+            Anda menandai jawaban "YA" pada indikator bahaya kritis (termasuk kekerasan, pelecehan seksual, pemaksaan, pembatasan kesehatan, atau risiko keselamatan anak). Utamakan keselamatan diri Anda dan anak-anak. Jangan menunggu total skor akhir.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-5xl mx-auto w-full px-4 flex-1 mb-12">
+    <form id="screeningForm" onsubmit="return false;">
+      <div id="questionsContainer" class="space-y-8">
+      </div>
+
+      <div id="navigationFooter" class="no-print glass-card p-6 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex gap-3 w-full sm:w-auto">
+          <button type="button" id="prevSectionBtn" onclick="navigateSection(-1)" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-[var(--line)] bg-[var(--card)] font-bold text-xs hover:border-[var(--gold)] transition-colors">
+            &larr; Bagian Sebelumnya
+          </button>
+          <button type="button" id="nextSectionBtn" onclick="navigateSection(1)" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-[var(--teal)] text-white font-bold text-xs hover:brightness-110 transition-all">
+            Bagian Selanjutnya &rarr;
+          </button>
+        </div>
+
+        <button type="button" id="calculateResultBtn" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-[var(--gold)] text-[#16232c] font-bold text-sm tracking-wide shadow-lg hover:brightness-105 active:scale-95 transition-all">
+          HITUNG HASIL & ANALISIS
+        </button>
+      </div>
+    </form>
+
+    <section id="resultsSection" class="hidden mt-12 space-y-8">
+      <div class="glass-card p-6 sm:p-10 border-2" id="resultCardHeader">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-[var(--line)] pb-6 mb-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Laporan Skrining Akhir</span>
+            <h2 class="font-fraunces text-3xl font-bold mt-1" id="resultStatusTitle">Analisis Risiko</h2>
+            <p class="text-xs text-[var(--muted)] mt-1" id="resultTimestamp"></p>
+          </div>
+          <div class="text-right flex flex-col items-start md:items-end">
+            <span class="text-xs text-[var(--muted)] font-semibold uppercase">Persentase Skor Risiko</span>
+            <span class="font-fraunces text-4xl sm:text-5xl font-extrabold font-mono" id="resultPercentageText">0.0%</span>
+            <span class="text-xs font-semibold px-3 py-1 rounded-full mt-2" id="resultBadgeLabel">Provisional</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <div class="p-4 rounded-xl bg-[var(--paper-2)] border border-[var(--line)]">
+            <div class="text-xs font-bold text-[var(--muted)] uppercase">Aliran Gereja</div>
+            <div class="text-xl font-bold font-mono mt-1" id="resultAliranGereja">-</div>
+            <div class="text-[11px] text-[var(--muted)] mt-1">Aliran gereja berdasarkan pilihan user</div>
+          </div>
+          <div class="p-4 rounded-xl bg-[var(--paper-2)] border border-[var(--line)]">
+            <div class="text-xs font-bold text-[var(--muted)] uppercase">Total Skor Risiko</div>
+            <div class="text-2xl font-bold font-mono mt-1" id="resultScoreRisk">0</div>
+            <div class="text-[11px] text-[var(--muted)] mt-1">Jumlah bobot terhitung dari jawaban berisiko</div>
+          </div>
+          <div class="p-4 rounded-xl bg-[var(--paper-2)] border border-[var(--line)]">
+            <div class="text-xs font-bold text-[var(--muted)] uppercase">Denominator Bobot Max</div>
+            <div class="text-2xl font-bold font-mono mt-1" id="resultScoreMax">0</div>
+            <div class="text-[11px] text-[var(--muted)] mt-1">Bobot maksimum dari item yang dijawab substantif</div>
+          </div>
+          <div class="p-4 rounded-xl bg-[var(--paper-2)] border border-[var(--line)]">
+            <div class="text-xs font-bold text-[var(--muted)] uppercase">Kelayakan Data</div>
+            <div class="text-2xl font-bold font-mono mt-1" id="resultDataQuality">0 / 103</div>
+            <div class="text-[11px] text-[var(--muted)] mt-1" id="resultDataQualitySub">Min. 83 butir substantif</div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--line)]">
+            <h4 class="font-bold text-sm mb-1 text-[var(--ink)]">Makna Hasil:</h4>
+            <p class="text-sm text-[var(--muted)] leading-relaxed" id="resultMeaningText">...</p>
+          </div>
+          <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--line)]">
+            <h4 class="font-bold text-sm mb-1 text-[var(--ink)]">Tindak Lanjut Disarankan:</h4>
+            <p class="text-sm text-[var(--muted)] leading-relaxed" id="resultActionText">...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 sm:p-8">
+        <h3 class="font-fraunces text-2xl font-bold mb-4">Profil Risiko Per Bagian (A – I)</h3>
+        <p class="text-xs text-[var(--muted)] mb-6">Profil ini mencegah skor total menyembunyikan risiko spesifik (seperti keselamatan anak, keuangan, atau kekerasan).</p>
+        
+        <div id="domainBreakdownContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        </div>
+      </div>
+
+      <div class="no-print flex flex-wrap items-center justify-end gap-4">
+        <button type="button" onclick="window.print()" class="px-6 py-3 rounded-xl border border-[var(--line)] bg-[var(--card)] hover:bg-[var(--paper-2)] font-bold text-xs tracking-wider uppercase transition-colors">
+          Cetak / Simpan PDF
+        </button>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+<script>
+const ALIRAN_LIST = [
+  'Katolik', 'Ortodoks', 'Lutheran', 'Reformed', 
+  'Pentekostal', 'Karismatik', 'Metodis', 'Baptis', 'Anabaptis'
+];
+
+const QUESTIONS = [
+  // SECTION A
+  { id: 1, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah Anda merasa takut terhadap pemimpin atau pengurus kelompok Anda?', weight: 3, protective: false },
+  { id: 2, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah keputusan penting dalam kelompok sangat bergantung pada satu orang pemimpin?', weight: 2, protective: false },
+  { id: 3, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin menggunakan kedudukan atau klaim otoritas rohani untuk membuat orang lain harus mengikuti keputusannya?', weight: 3, protective: false },
+  { id: 4, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin sulit menerima kritik atau mengakui bahwa dirinya bisa melakukan kesalahan?', weight: 2, protective: false },
+  { id: 5, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin menganggap bahwa keputusan atau pesan yang disampaikannya berasal langsung dari Tuhan sehingga sulit untuk dipertanyakan?', weight: 3, protective: false },
+  { id: 6, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah orang-orang yang dekat dengan pemimpin cenderung hanya mengikuti keputusan pemimpin tanpa berani menyampaikan pendapat yang berbeda?', weight: 2, protective: false },
+  { id: 7, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah struktur kepemimpinan kelompok sangat terpusat pada satu orang dan hampir tidak ada pengawasan terhadapnya?', weight: 3, protective: false },
+  { id: 8, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah Anda bebas bertanya tentang latar belakang pemimpin dan kelompok tanpa dianggap buruk, tidak setia, atau suka memecah belah?', weight: 3, protective: true },
+  { id: 9, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah Anda akan ditegur, dipermalukan, atau mendapat masalah jika mencari informasi tentang latar belakang dan sejarah pemimpin atau kelompok?', weight: 3, protective: false },
+  { id: 10, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah Anda bebas mempertanyakan ajaran, nubuat, atau pesan rohani yang pernah disampaikan oleh pemimpin?', weight: 3, protective: true },
+  { id: 11, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah Anda bebas menanyakan latar belakang pendidikan, pengalaman pelayanan, kebijakan, atau rekam jejak pemimpin?', weight: 2, protective: true },
+  { id: 12, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah orang-orang yang membantu pemimpin dapat menyampaikan pendapat berbeda atau mengingatkan pemimpin ketika ada keputusan yang bermasalah?', weight: 2, protective: true },
+  { id: 13, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin memiliki mekanisme pertanggungjawaban yang jelas dalam hal moral, etika, pelayanan, dan keuangan?', weight: 3, protective: true },
+  { id: 14, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin menyembunyikan atau tidak mengungkapkan riwayat hukum/tindak pidana yang relevan dengan tanggung jawabnya, sehingga menimbulkan risiko bagi anggota?', weight: 3, protective: false },
+  { id: 15, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin terbuka dan tidak menghalangi pemeriksaan informasi mengenai latar belakang dirinya?', weight: 2, protective: true },
+  { id: 16, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah Anda pernah diminta untuk tidak mencari atau membicarakan informasi pribadi atau latar belakang pemimpin?', weight: 3, protective: false },
+  { id: 17, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Ketika ada orang yang melaporkan masalah atau dugaan penyalahgunaan, apakah pemimpin justru menyebut orang tersebut tidak beriman, tidak loyal, atau memberontak?', weight: 4, protective: false, redAlertFollowup: true },
+  { id: 18, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin sulit ditemui atau dihubungi ketika anggota memiliki masalah serious yang membutuhkan perhatian?', weight: 1, protective: false },
+  { id: 19, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Ketika Anda menyampaikan masalah, apakah Anda justru dianggap sebagai sumber masalah daripada masalah yang Anda laporkan yang dibahas?', weight: 3, protective: false },
+  { id: 20, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin bersikap kasar, merendahkan, mengintimidasi, atau tidak menghargai anggota?', weight: 3, protective: false },
+  { id: 21, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin atau orang-orang terdekatnya diperlakukan sebagai kelompok yang memiliki kedudukan khusus dan sulit dikritik?', weight: 2, protective: false },
+  { id: 22, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah pemimpin mengajarkan bahwa hanya dirinya atau kelompoknya yang memiliki kewenangan yang benar untuk menafsirkan ajaran agama?', weight: 3, protective: false },
+  { id: 23, sec: 'A', title: 'Kepemimpinan Gereja/Kelompok', text: 'Apakah kelompok mengajarkan bahwa hanya kelompok mereka yang benar atau menjadi satu-satunya kelompok yang benar di hadapan Tuhan?', weight: 3, protective: false },
+
+  // SECTION B
+  { id: 24, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda merasa ajaran agama sering digunakan atau ditafsirkan sedemikian rupa untuk membenarkan keputusan pemimpin?', weight: 2, protective: false },
+  { id: 25, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda merasa anggota diarahkan untuk menerima satu tafsir tertentu tanpa diberi kesempatan memahami atau mempertimbangkan tafsir lain?', weight: 2, protective: false },
+  { id: 26, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda diberi tahu bahwa Anda harus mempercayai ajaran tertentu tanpa boleh mempertanyakannya?', weight: 3, protective: false },
+  { id: 27, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda diarahkan untuk mempelajari kitab suci tetapi tidak diberi kebebasan untuk mempelajarinya secara mandiri?', weight: 3, protective: false },
+  { id: 28, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah pemimpin menggunakan klaim menerima pesan, wahyu, atau petunjuk khusus dari Tuhan untuk menutup pertanyaan atau memaksa anggota mengikuti keputusannya?', weight: 3, protective: false },
+  { id: 29, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah kelompok sulit atau tidak mau memberikan penjelasan tertulis mengenai keyakinan dan ajaran utamanya?', weight: 1, protective: false },
+  { id: 30, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda kesulitan mendapatkan jawaban yang jelas ketika menanyakan ajaran atau aturan kelompok?', weight: 1, protective: false },
+  { id: 31, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah ada ajaran, praktik, atau kegiatan tertentu yang sengaja dirahasiakan dari anggota atau orang di luar kelompok?', weight: 3, protective: false },
+  { id: 32, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah anggota diminta membuat janji, sumpah, atau komitmen yang menurut Anda tidak wajar atau terlalu berat?', weight: 3, protective: false },
+  { id: 33, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah pemimpin menggunakan nada bicara yang kasar, menekan, atau membuat anggota merasa harus terus mengikuti perintah?', weight: 2, protective: false },
+  { id: 34, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda dilarang membicarakan ajaran, aturan, atau praktik tertentu dengan orang di luar kelompok tanpa alasan yang jelas?', weight: 3, protective: false },
+  { id: 35, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda bebas membaca kitab suci dan mempelajarinya sendiri, termasuk mempertimbangkan pemahaman selain dari kelompok Anda?', weight: 3, protective: true },
+  { id: 36, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda pernah diminta memutus atau membatasi hubungan dengan keluarga, pasangan, atau teman karena mereka tidak mengikuti kelompok Anda?', weight: 4, protective: false },
+  { id: 37, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah Anda pernah diminta untuk menjauhi, membatasi komunikasi, atau memutus hubungan dengan orang yang sudah keluar dari kelompok?', weight: 4, protective: false },
+  { id: 38, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah anggota yang masih berada di dalam kelompok ditekan atau diarahkan untuk menjauhi orang yang sudah keluar dari kelompok?', weight: 4, protective: false },
+  { id: 39, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah orang yang sudah keluar dari kelompok sering dianggap buruk, tidak beriman, berbahaya, atau tidak layak lagi untuk diajak bergaul?', weight: 2, protective: false },
+  { id: 40, sec: 'B', title: 'Kelompok dan Ajarannya', text: 'Apakah orang-orang yang berbeda pendapat dengan pemimpin biasanya diberi label negatif, ditekan, atau dianggap sebagai ancaman bagi kelompok?', weight: 2, protective: false },
+
+  // SECTION C
+  { id: 41, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah aturan kelompok memungkinkan pemimpin menggunakan ancaman, tekanan, penghinaan, atau bentuk tekanan lain agar anggota mengikuti kehendaknya?', weight: 4, protective: false },
+  { id: 42, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah aturan disiplin kelompok terasa sangat keras atau tidak sebanding dengan kesalahan yang dilakukan?', weight: 2, protective: false },
+  { id: 43, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah aturan disiplin kelompok dapat menyebabkan seseorang mengalami kerugian, bahaya, penghinaan, atau perlakuan yang tidak manusiawi?', weight: 4, protective: false },
+  { id: 44, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah Anda dilarang atau dipersulit untuk mengunjungi komunitas atau tempat ibadah lain?', weight: 2, protective: false },
+  { id: 45, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah Anda akan mendapat masalah jika menghadiri kegiatan keagamaan di tempat lain, misalnya pernikahan, baptisan, pemakaman, atau kegiatan keluarga?', weight: 2, protective: false },
+  { id: 46, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah mempertanyakan aturan kelompok dapat menyebabkan hubungan Anda dengan pemimpin atau anggota lain menjadi buruk?', weight: 2, protective: false },
+  { id: 47, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah terdapat aturan kelompok yang menurut Anda dapat membahayakan anak, keluarga, atau anggota kelompok?', weight: 4, protective: false },
+  { id: 48, sec: 'C', title: 'Kebijakan dan Aturan Kelompok', text: 'Apakah kelompok menggunakan penghinaan atau mempermalukan seseorang di depan anggota lain sebagai bentuk disiplin?', weight: 3, protective: false },
+
+  // SECTION D
+  { id: 49, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Apakah Anda merasa harus menerima informasi dari kelompok tanpa memeriksa atau membandingkannya dengan sumber lain?', weight: 1, protective: false },
+  { id: 50, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Apakah Anda akan dihukum atau ditegur jika membaca buku, artikel, menonton video, atau menggunakan sumber informasi dari luar kelompok?', weight: 3, protective: false },
+  { id: 51, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Apakah Anda hanya diperbolehkan menggunakan bahan belajar yang disediakan atau disetujui oleh kelompok?', weight: 3, protective: false },
+  { id: 52, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Apakah pemimpin mengatakan bahwa hanya bahan informasi dari kelompok mereka yang benar atau berasal dari Tuhan?', weight: 3, protective: false },
+  { id: 53, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Apakah informasi atau sumber keagamaan dari luar kelompok sering disebut sebagai sesat, jahat, atau berbahaya hanya karena berasal dari luar kelompok?', weight: 3, protective: false },
+  { id: 54, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Apakah Anda akan mendapat masalah jika membaca informasi yang mengkritik kelompok atau pemimpinnya?', weight: 3, protective: false },
+  { id: 55, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Apakah pemimpin sering merendahkan atau mengejek kelompok, gereja, komunitas, atau pihak luar yang memiliki pandangan berbeda?', weight: 1, protective: false },
+  { id: 56, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Jika Anda menunjukkan adanya kesalahan dalam ajaran atau pernyataan pemimpin, apakah pemimpin cenderung marah atau menolak pembahasan tersebut?', weight: 3, protective: false },
+  { id: 57, sec: 'D', title: 'Literatur, Informasi, dan Media', text: 'Ketika terjadi kesalahan, pelanggaran, atau penyalahgunaan wewenang, apakah pemimpin menolak mengakui kesalahan, meminta maaf, atau melakukan perbaikan?', weight: 4, protective: false },
+
+  // SECTION E
+  { id: 58, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah Anda merasa harus mendapatkan persetujuan pemimpin sebelum mengambil keputusan pribadi seperti pakaian, makanan, pekerjaan, pergaulan, hubungan, atau kegiatan sehari-hari?', weight: 3, protective: false },
+  { id: 59, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah kehidupan pribadi atau pelayanan Anda terlalu banyak diatur dan diawasi oleh pemimpin atau pengurus?', weight: 2, protective: false },
+  { id: 60, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah pemimpin memberikan tekanan yang membuat Anda sulit mengambil keputusan sendiri?', weight: 2, protective: false },
+  { id: 61, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah pemimpin bersikap kasar, mengancam, menakut-nakuti, atau sengaja membuat anggota merasa tidak berdaya?', weight: 4, protective: false },
+  { id: 62, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah ada pemimpin yang menggunakan alasan seperti "Tuhan mengatakan kepada saya" untuk membenarkan perilaku seksual yang tidak pantas?', weight: 4, protective: false, redAlert: true },
+  { id: 63, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah Anda pernah dipaksa, dibujuk secara tidak pantas, diancam, atau dimanipulasi untuk melakukan aktivitas seksual dengan pemimpin atau anggota kelompok?', weight: 4, protective: false, redAlert: true },
+  { id: 64, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah Anda pernah dipaksa, ditekan, atau dimanipulasi untuk memberikan uang, persembahan, perpuluhan, atau sumbangan?', weight: 4, protective: false },
+  { id: 65, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah Anda pernah mengalami kekerasan fisik, termasuk dipukul, ditampar, diikat, disakiti, atau disentuh secara seksual tanpa persetujuan?', weight: 4, protective: false, redAlert: true },
+  { id: 66, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah kelompok pernah menggunakan kurang tidur, pembatasan makanan/minuman, atau tindakan lain yang dapat membahayakan kesehatan sebagai bagian dari kegiatan rohani?', weight: 4, protective: false, redAlert: true },
+  { id: 67, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah Anda pernah dipaksa atau ditekan untuk melakukan sesuatu yang bertentangan dengan nilai, moral, atau hati nurani Anda?', weight: 4, protective: false },
+  { id: 68, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Ketika Anda menyampaikan masalah tentang kepemimpinan, apakah pemimpin cenderung menyalahkan Anda daripada membahas masalah tersebut?', weight: 2, protective: false },
+  { id: 69, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Ketika Anda menyampaikan keluhan yang masuk akal, apakah pemimpin memutarbalikkan keadaan sehingga Anda dianggap sebagai penyebab masalah?', weight: 4, protective: false },
+  { id: 70, sec: 'E', title: 'Moral, Etika, Kesehatan, dan Hak Pribadi', text: 'Apakah pemimpin atau pengurus pernah berbohong kepada Anda atau meminta Anda membantu menutupi kebohongan atau pelanggaran orang lain?', weight: 2, protective: false },
+
+  // SECTION F
+  { id: 71, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda merasa dimanipulasi ketika membuat keputusan tentang kehidupan pribadi Anda?', weight: 4, protective: false },
+  { id: 72, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah pemimpin pernah membuat keputusan yang menyangkut kehidupan Anda tanpa persetujuan Anda?', weight: 2, protective: false },
+  { id: 73, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah pemimpin atau orang yang memiliki otoritas pernah menggunakan ancaman untuk memaksa Anda melakukan sesuatu?', weight: 4, protective: false, redAlert: true },
+  { id: 74, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda merasa harus selalu hadir dalam kegiatan kelompok karena takut dianggap tidak setia jika tidak hadir?', weight: 2, protective: false },
+  { id: 75, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Jika Anda ingin meninggalkan kelompok, apakah Anda merasa takut akan mendapat ancaman, hukuman, kehilangan hubungan, atau konsekuensi serius lainnya?', weight: 4, protective: false, redAlert: true },
+  { id: 76, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda pernah dilibatkan dalam kegiatan yang sebenarnya tidak ingin Anda ikuti karena merasa tidak dapat menolak?', weight: 2, protective: false },
+  { id: 77, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda sering merasa tertekan atau dimanipulasi ketika harus mengambil keputusan?', weight: 2, protective: false },
+  { id: 78, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda sering merasa bersalah atau malu hanya karena mengambil keputusan yang berbeda dari kebiasaan kelompok?', weight: 1, protective: false },
+  { id: 79, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah pemimpin atau anggota lain mengambil keputusan penting untuk Anda tanpa memberikan ruang yang cukup bagi Anda untuk menentukan pilihan sendiri?', weight: 2, protective: false },
+  { id: 80, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda ditekan untuk menghindari informasi dari luar yang dapat membuat Anda mempertanyakan kelompok?', weight: 2, protective: false },
+  { id: 81, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda takut akan dihukum, dikucilkan, dipermalukan, atau dianggap tidak beriman jika membuat keputusan yang tidak sesuai dengan keinginan pemimpin?', weight: 4, protective: false },
+  { id: 82, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah Anda pernah mengalami hukuman, penghinaan, perlakuan diam, manipulasi emosional, tekanan keuangan, atau bentuk penyalahgunaan lain karena tidak mengikuti keinginan kelompok?', weight: 4, protective: false, redAlertFollowup: true },
+  { id: 83, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah ada aturan berpakaian yang jika tidak dipatuhi dapat menyebabkan Anda dihukum, dipermalukan, atau dikucilkan?', weight: 3, protective: false },
+  { id: 84, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah kelompok menetapkan aturan berpakaian atau penampilan tertentu sebagai syarat agar seseorang dianggap lebih berkenan kepada Tuhan?', weight: 1, protective: false },
+  { id: 85, sec: 'F', title: 'Kebebasan dalam Membuat Keputusan Pribadi', text: 'Apakah anggota yang tidak mengikuti aturan berpakaian atau penampilan kelompok pernah disebut kurang rohani, tidak taat, memberontak, atau diberi label negatif lainnya?', weight: 3, protective: false },
+
+  // SECTION G
+  { id: 86, sec: 'G', title: 'Keselamatan Anak', text: 'Apakah orang yang diketahui memiliki riwayat kejahatan seksual terhadap anak tetap diberi akses atau tanggung jawab dalam pelayanan anak atau remaja?', weight: 4, protective: false, redAlert: true },
+  { id: 87, sec: 'G', title: 'Keselamatan Anak', text: 'Apakah kelompok tetap membiarkan seseorang yang diketahui memiliki riwayat kejahatan seksual berada dekat dengan anak, meskipun ada alasan keselamatan yang jelas untuk membatasi aksesnya?', weight: 4, protective: false, redAlert: true },
+  { id: 88, sec: 'G', title: 'Keselamatan Anak', text: 'Jika ada orang dengan riwayat kejahatan seksual mencoba mendekati atau mengikuti kegiatan kelompok yang dihadiri anak, apakah pemimpin tidak mengambil tindakan yang memadai untuk melindungi anak?', weight: 4, protective: false, redAlert: true },
+
+  // SECTION H
+  { id: 89, sec: 'H', title: 'Keuangan', text: 'Apakah anggota bebas menanyakan bagaimana uang kelompok dikelola, digunakan, dan dipertanggungjawabkan?', weight: 3, protective: true },
+  { id: 90, sec: 'H', title: 'Keuangan', text: 'Apakah kelompok tidak terbuka mengenai sumber, penggunaan, atau tujuan dana yang mereka kelola?', weight: 3, protective: false },
+  { id: 91, sec: 'H', title: 'Keuangan', text: 'Jika Anda menanyakan siapa yang mengelola atau menghitung uang, apakah pemimpin menunjukkan sikap curiga, merendahkan, atau marah?', weight: 2, protective: false },
+  { id: 92, sec: 'H', title: 'Keuangan', text: 'Apakah pengelolaan uang kelompok hanya dikuasai oleh satu orang atau satu pasangan tanpa pengawasan yang memadai?', weight: 2, protective: false },
+  { id: 93, sec: 'H', title: 'Keuangan', text: 'Apakah pemimpin mengatakan bahwa kelompok tidak memerlukan mekanisme pengawasan keuangan?', weight: 2, protective: false },
+  { id: 94, sec: 'H', title: 'Keuangan', text: 'Apakah kelompok tidak memenuhi kewajiban administrasi atau pelaporan keuangan yang diwajibkan oleh hukum yang berlaku?', weight: 3, protective: false },
+  { id: 95, sec: 'H', title: 'Keuangan', text: 'Apakah terdapat kekurangan yang jelas dalam pencatatan, penghitungan, penyimpanan, penggunaan, atau penyetoran uang kelompok?', weight: 3, protective: false },
+  { id: 96, sec: 'H', title: 'Keuangan', text: 'Ketika Anda mempertanyakan transparansi keuangan, apakah pemimpin bersikap defensif atau menganggap pertanyaan tersebut sebagai bentuk ketidakpercayaan?', weight: 3, protective: false },
+
+  // SECTION I
+  { id: 97, sec: 'I', title: 'Indikator Tambahan', text: 'Apakah banyak anggota bergabung lalu meninggalkan kelompok dalam waktu relatif singkat, disertai alasan atau pola yang mengkhawatirkan?', weight: 1, protective: false },
+  { id: 98, sec: 'I', title: 'Indikator Tambahan', text: 'Apakah Anda sering mendengar konflik, pertengkaran, kepahitan, atau masalah serius di antara anggota dan pemimpin?', weight: 1, protective: false },
+  { id: 99, sec: 'I', title: 'Indikator Tambahan', text: 'Apakah kelompok secara terus-menerus menggambarkan orang atau kelompok di luar mereka sebagai jahat, sesat, atau tidak layak dipercaya?', weight: 2, protective: false },
+  { id: 100, sec: 'I', title: 'Indikator Tambahan', text: 'Apakah kelompok mengajarkan bahwa hanya kelompok mereka yang benar sehingga kelompok lain dianggap salah atau tidak berkenan kepada Tuhan?', weight: 2, protective: false },
+  { id: 101, sec: 'I', title: 'Indikator Tambahan', text: 'Apakah Anda pernah mengalami perlakuan kasar, merendahkan, menakutkan, atau penyalahgunaan wewenang dari pemimpin?', weight: 4, protective: false },
+  { id: 102, sec: 'I', title: 'Indikator Tambahan', text: 'Apakah pemimpin atau pengurus berulang kali mengabaikan tanggung jawab keluarga atau tanggung jawab pribadi penting karena tuntutan kegiatan kelompok?', weight: 1, protective: false },
+  { id: 103, sec: 'I', title: 'Indikator Tambahan', text: 'Apakah kelompok menggunakan praktik spiritual atau kegiatan tertentu yang membuat Anda merasa kehilangan kendali atas diri sendiri, mengalami tekanan, atau mengalami gangguan fisik maupun psikologis?', weight: 4, protective: false, redAlert: true }
+];
+
+const SECTIONS = [
+  { code: 'A', title: 'A. Kepemimpinan' },
+  { code: 'B', title: 'B. Kelompok & Ajaran' },
+  { code: 'C', title: 'C. Kebijakan & Aturan' },
+  { code: 'D', title: 'D. Informasi & Media' },
+  { code: 'E', title: 'E. Moral, Etika & Hak' },
+  { code: 'F', title: 'F. Kebebasan Keputusan' },
+  { code: 'G', title: 'G. Keselamatan Anak' },
+  { code: 'H', title: 'H. Keuangan' },
+  { code: 'I', title: 'I. Indikator Tambahan' }
+];
+
+const STORAGE_KEY = 'spiritual_abuse_screening_answers_v1';
+const ALIRAN_KEY = 'spiritual_abuse_screening_aliran_v1';
+const THEME_KEY = 'ntp_dashboard_theme_mode';
+
+let userAnswers = {}; 
+let selectedAliranGereja = '';
+let currentSectionIndex = 0; 
+
+const questionsContainer = document.getElementById('questionsContainer');
+const sectionTabs = document.getElementById('sectionTabs');
+const answeredCountText = document.getElementById('answeredCountText');
+const substantiveCountText = document.getElementById('substantiveCountText');
+const nonSubstantiveCountText = document.getElementById('nonSubstantiveCountText');
+const topProgressBar = document.getElementById('topProgressBar');
+const redAlertBanner = document.getElementById('redAlertBanner');
+const prevSectionBtn = document.getElementById('prevSectionBtn');
+const nextSectionBtn = document.getElementById('nextSectionBtn');
+
+window.addEventListener('DOMContentLoaded', () => {
+  initClock();
+  initTheme();
+  loadSavedAnswers();
+  renderAliranPills();
+  renderSectionTabs();
+  renderCurrentSection();
+  updateProgressUI();
+
+  document.getElementById('calculateResultBtn').addEventListener('click', calculateAndRenderResults);
+  document.getElementById('resetFormBtn').addEventListener('click', resetForm);
+  document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
+});
+
+function initClock() {
+  function tick() {
+    const now = new Date();
+    document.getElementById('headerClock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+    document.getElementById('headerDate').textContent = `${now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'auto';
+  applyTheme(savedTheme);
+}
+
+function applyTheme(mode) {
+  if (mode === 'dark') {
+    document.body.setAttribute('data-theme', 'dark');
+  } else if (mode === 'light') {
+    document.body.removeAttribute('data-theme');
+  } else {
+    const hour = new Date().getHours();
+    if (hour < 6 || hour >= 18) {
+      document.body.setAttribute('data-theme', 'dark');
+    } else {
+      document.body.removeAttribute('data-theme');
+    }
+  }
+}
+
+function toggleTheme() {
+  const current = document.body.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+}
+
+function loadSavedAnswers() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) userAnswers = JSON.parse(raw);
+    
+    selectedAliranGereja = localStorage.getItem(ALIRAN_KEY) || '';
+  } catch (e) {
+    userAnswers = {};
+    selectedAliranGereja = '';
+  }
+}
+
+function renderAliranPills() {
+  const container = document.getElementById('aliranPillsContainer');
+  if (!container) return;
+
+  container.innerHTML = ALIRAN_LIST.map(aliran => {
+    const isActive = selectedAliranGereja === aliran;
+    return `
+      <button type="button" onclick="selectAliranPill('${aliran}')"
+        class="aliran-pill px-4 py-2 rounded-full text-xs font-semibold ${isActive ? 'active' : ''}">
+        ${aliran}
+      </button>
+    `;
+  }).join('');
+}
+
+function selectAliranPill(aliran) {
+  if (selectedAliranGereja === aliran) {
+    selectedAliranGereja = ''; 
+  } else {
+    selectedAliranGereja = aliran;
+  }
+  
+  if (selectedAliranGereja) {
+    localStorage.setItem(ALIRAN_KEY, selectedAliranGereja);
+  } else {
+    localStorage.removeItem(ALIRAN_KEY);
+  }
+
+  renderAliranPills();
+}
+
+function saveAnswers() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers));
+  } catch(e) {}
+}
+
+function resetForm() {
+  if (confirm('Apakah Anda yakin ingin menghapus semua jawaban dan memulai kembali?')) {
+    userAnswers = {};
+    selectedAliranGereja = '';
+    localStorage.removeItem(ALIRAN_KEY);
+    renderAliranPills();
+
+    saveAnswers();
+    currentSectionIndex = 0;
+    renderSectionTabs();
+    renderCurrentSection();
+    updateProgressUI();
+    document.getElementById('resultsSection').classList.add('hidden');
+    document.getElementById('redAlertBanner').classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function renderSectionTabs() {
+  sectionTabs.innerHTML = SECTIONS.map((s, idx) => `
+    <button type="button" onclick="setSectionIndex(${idx})" 
+      class="section-tab-btn px-3 py-1.5 rounded-xl border border-[var(--line)] bg-[var(--card)] text-xs font-bold text-[var(--ink)] whitespace-nowrap transition-all ${idx === currentSectionIndex ? 'active' : 'hover:border-[var(--gold)]'}">
+      ${s.title}
+    </button>
+  `).join('');
+}
+
+function setSectionIndex(index) {
+  if (index >= 0 && index < SECTIONS.length) {
+    currentSectionIndex = index;
+    renderSectionTabs();
+    renderCurrentSection();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function navigateSection(direction) {
+  const newIndex = currentSectionIndex + direction;
+  if (newIndex >= 0 && newIndex < SECTIONS.length) {
+    setSectionIndex(newIndex);
+  }
+}
+
+function renderCurrentSection() {
+  const activeSec = SECTIONS[currentSectionIndex];
+  const sectionQuestions = QUESTIONS.filter(q => q.sec === activeSec.code);
+
+  let html = `
+    <div class="pt-2 pb-2 border-b-2 border-[var(--gold)] mb-6 flex justify-between items-center">
+      <h3 class="font-fraunces text-2xl font-bold text-[var(--ink)]">${activeSec.title}</h3>
+      <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-[var(--paper-2)] border border-[var(--line)] text-[var(--muted)]">
+        ${currentSectionIndex + 1} of ${SECTIONS.length}
+      </span>
+    </div>
+  `;
+
+  sectionQuestions.forEach((q) => {
+    const currentAns = userAnswers[q.id];
+    const isAnswered = currentAns && currentAns !== 'TDK_JAWAB';
+
+    html += `
+      <div class="glass-card p-5 sm:p-6 transition-all relative" id="q_card_${q.id}">
+        <!-- Top Right Clear Answer (X) Button -->
+        <button type="button" onclick="clearAnswer(${q.id})" id="clear_btn_${q.id}"
+          title="Batalkan Pilihan"
+          class="absolute top-4 right-4 w-7 h-7 rounded-full border border-[var(--line)] bg-[var(--paper-2)] text-[var(--muted)] hover:text-red-500 hover:border-red-500 flex items-center justify-center font-bold text-xs transition-colors ${isAnswered ? '' : 'hidden'}">
+          &#10005;
+        </button>
+
+        <div class="flex items-start justify-between gap-3 mb-3 pr-8">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[var(--paper-2)] border border-[var(--line)]">
+              No. ${q.id}
+            </span>
+            ${q.protective ? '<span class="text-[10px] bg-red-500/10 text-red-600 border border-red-500/20 px-1.5 py-0.5 rounded font-bold">Pertanyaan Kemungkinan Sensitif †</span>' : ''}
+            ${q.redAlert ? '<span class="text-[10px] bg-rose-500/10 text-rose-600 border border-rose-500/20 px-1.5 py-0.5 rounded font-bold">Kritis</span>' : ''}
+          </div>
+        </div>
+
+        <p class="text-sm sm:text-base font-semibold leading-relaxed mb-4 text-[var(--ink)]">
+          ${q.text}
+        </p>
+
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" onclick="setAnswer(${q.id}, 'YA')" 
+            class="option-btn text-xs font-bold py-2.5 px-3 rounded-xl text-center ${currentAns === 'YA' ? 'selected-ya' : ''}">
+            YA
+          </button>
+          <button type="button" onclick="setAnswer(${q.id}, 'TIDAK')" 
+            class="option-btn text-xs font-bold py-2.5 px-3 rounded-xl text-center ${currentAns === 'TIDAK' ? 'selected-tidak' : ''}">
+            TIDAK
+          </button>
+          <button type="button" onclick="setAnswer(${q.id}, 'TDK_TAHU')" 
+            class="option-btn text-xs font-medium py-2.5 px-2 rounded-xl text-center ${currentAns === 'TDK_TAHU' ? 'selected-neutral' : ''}">
+            TIDAK TAHU
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  questionsContainer.innerHTML = html;
+
+  prevSectionBtn.disabled = currentSectionIndex === 0;
+  prevSectionBtn.style.opacity = currentSectionIndex === 0 ? '0.4' : '1';
+
+  if (currentSectionIndex === SECTIONS.length - 1) {
+    nextSectionBtn.classList.add('hidden');
+  } else {
+    nextSectionBtn.classList.remove('hidden');
+  }
+}
+
+function setAnswer(qId, value) {
+  userAnswers[qId] = value;
+  saveAnswers();
+
+  const card = document.getElementById(`q_card_${qId}`);
+  if (card) {
+    const btns = card.querySelectorAll('.option-btn');
+    btns[0].className = `option-btn text-xs font-bold py-2.5 px-3 rounded-xl text-center ${value === 'YA' ? 'selected-ya' : ''}`;
+    btns[1].className = `option-btn text-xs font-bold py-2.5 px-3 rounded-xl text-center ${value === 'TIDAK' ? 'selected-tidak' : ''}`;
+    btns[2].className = `option-btn text-xs font-medium py-2.5 px-2 rounded-xl text-center ${value === 'TDK_TAHU' ? 'selected-neutral' : ''}`;
+
+    const clearBtn = document.getElementById(`clear_btn_${qId}`);
+    if (clearBtn) clearBtn.classList.remove('hidden');
+  }
+
+  updateProgressUI();
+  checkRedAlertRealtime();
+
+  setTimeout(() => {
+    const nextCard = document.getElementById(`q_card_${qId + 1}`);
+    if (nextCard) {
+      nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      const footer = document.getElementById('navigationFooter');
+      if (footer) {
+        footer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, 180);
+}
+
+function clearAnswer(qId) {
+  delete userAnswers[qId];
+  saveAnswers();
+
+  const card = document.getElementById(`q_card_${qId}`);
+  if (card) {
+    const btns = card.querySelectorAll('.option-btn');
+    btns[0].className = 'option-btn text-xs font-bold py-2.5 px-3 rounded-xl text-center';
+    btns[1].className = 'option-btn text-xs font-bold py-2.5 px-3 rounded-xl text-center';
+    btns[2].className = 'option-btn text-xs font-medium py-2.5 px-2 rounded-xl text-center';
+
+    const clearBtn = document.getElementById(`clear_btn_${qId}`);
+    if (clearBtn) clearBtn.classList.add('hidden');
+  }
+
+  updateProgressUI();
+  checkRedAlertRealtime();
+}
+
+function updateProgressUI() {
+  const answeredKeys = Object.keys(userAnswers);
+  const totalAnswered = answeredKeys.length;
+
+  let substantive = 0;
+  let nonSubstantive = 0;
+
+  answeredKeys.forEach(k => {
+    const val = userAnswers[k];
+    if (val === 'YA' || val === 'TIDAK') substantive++;
+    else if (val === 'TDK_TAHU' || val === 'TDK_JAWAB') nonSubstantive++;
+  });
+
+  answeredCountText.textContent = `${totalAnswered} / 103`;
+  substantiveCountText.textContent = substantive;
+  nonSubstantiveCountText.textContent = nonSubstantive;
+
+  const pct = Math.round((totalAnswered / 103) * 100);
+  topProgressBar.style.width = `${pct}%`;
+}
+
+function checkRedAlertRealtime() {
+  let redAlertTriggered = false;
+  QUESTIONS.forEach(q => {
+    if ((q.redAlert || q.redAlertFollowup) && userAnswers[q.id] === 'YA') {
+      redAlertTriggered = true;
+    }
+  });
+
+  if (redAlertTriggered) {
+    redAlertBanner.classList.remove('hidden');
+  } else {
+    redAlertBanner.classList.add('hidden');
+  }
+}
+
+function calculateAndRenderResults() {
+  let totalRiskScore = 0;
+  let totalSubstantiveMaxWeight = 0;
+  let substantiveCount = 0;
+  let nonSubstantiveCount = 0;
+  let hasRedAlert = false;
+  let hasRedAlertFollowup = false;
+
+  const domainStats = {};
+  SECTIONS.forEach(s => {
+    domainStats[s.code] = { title: s.title, riskScore: 0, maxWeight: 0, count: 0 };
+  });
+
+  QUESTIONS.forEach(q => {
+    const ans = userAnswers[q.id];
+    const sec = q.sec;
+
+    if (ans === 'YA' || ans === 'TIDAK') {
+      substantiveCount++;
+      totalSubstantiveMaxWeight += q.weight;
+      domainStats[sec].maxWeight += q.weight;
+      domainStats[sec].count++;
+
+      let itemRiskScore = 0;
+      if (!q.protective && ans === 'YA') {
+        itemRiskScore = q.weight;
+      } else if (q.protective && ans === 'TIDAK') {
+        itemRiskScore = q.weight;
+      }
+
+      totalRiskScore += itemRiskScore;
+      domainStats[sec].riskScore += itemRiskScore;
+    } else if (ans === 'TDK_TAHU' || ans === 'TDK_JAWAB') {
+      nonSubstantiveCount++;
+    }
+
+    if (ans === 'YA') {
+      if (q.redAlert) hasRedAlert = true;
+      if (q.redAlertFollowup) hasRedAlertFollowup = true;
+    }
+  });
+
+  const isDataValid = substantiveCount >= 83;
+  const pctRisk = totalSubstantiveMaxWeight > 0 
+    ? ((totalRiskScore / totalSubstantiveMaxWeight) * 100) 
+    : 0;
+
+  let label = '';
+  let badgeClass = '';
+  let meaning = '';
+  let action = '';
+
+  if (!isDataValid) {
+    label = 'HASIL BELUM DAPAT DIINTERPRETASIKAN';
+    badgeClass = 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
+    meaning = 'Data tidak cukup untuk penentuan kategori total karena kurang dari 83 butir (80%) dijawab dengan YA / TIDAK.';
+    action = 'Lengkapi minimal 83 pertanyaan dengan jawaban YA atau TIDAK agar instrumen dapat dikalkulasi secara shahih.';
+  } else if (pctRisk < 10) {
+    label = 'Hijau – Indikasi Terukur Rendah';
+    badgeClass = 'bg-emerald-500/20 text-emerald-500 border border-emerald-500/30';
+    meaning = 'Jawaban yang diberikan menunjukkan sedikit indikator risiko pada instrumen ini. Ini bukan bukti bahwa kelompok sepenuhnya aman.';
+    action = 'Tetap gunakan penilaian kritis; tinjau ulang jika ada pengalaman atau informasi baru.';
+  } else if (pctRisk >= 10 && pctRisk < 20) {
+    label = 'Kuning – Perlu Dicermati';
+    badgeClass = 'bg-amber-500/20 text-amber-500 border border-amber-500/30';
+    meaning = 'Ada beberapa indikator yang layak diperhatikan, terutama bila berulang atau berdampak pada kebebasan anggota.';
+    action = 'Baca ulang butir yang mendapat skor; cari konteks, pola, dan sumber informasi tambahan.';
+  } else if (pctRisk >= 20 && pctRisk < 35) {
+    label = 'Oranye – Perlu Ditelaah Lebih Lanjut';
+    badgeClass = 'bg-orange-500/20 text-orange-500 border border-orange-500/30';
+    meaning = 'Terdapat kumpulan indikator yang cukup berarti dan sebaiknya tidak diabaikan.';
+    action = 'Pertimbangkan berdiskusi dengan pihak independen yang kompeten dan menilai keselamatan serta akuntabilitas.';
+  } else {
+    label = 'Merah – Tingkat Kekhawatiran Tinggi';
+    badgeClass = 'bg-rose-500/20 text-rose-500 border border-rose-500/30';
+    meaning = 'Banyak indikator risiko terlapor pada jawaban. Skor tidak membuktikan pelanggaran, tetapi perlu penelaahan yang serius.';
+    action = 'Utamakan keselamatan, dokumentasikan fakta, dan cari dukungan independen yang sesuai.';
+  }
+
+  if (hasRedAlert || hasRedAlertFollowup) {
+    label += ' [RED ALERT DETECTED]';
+  }
+
+  document.getElementById('resultStatusTitle').textContent = label;
+  document.getElementById('resultTimestamp').textContent = `Dianalisis pada: ${new Date().toLocaleString('id-ID')}`;
+  document.getElementById('resultPercentageText').textContent = isDataValid ? `${pctRisk.toFixed(1)}%` : 'N/A';
+
+  document.getElementById('resultAliranGereja').textContent = selectedAliranGereja || 'Tidak Dipilih';
+  
+  const badgeEl = document.getElementById('resultBadgeLabel');
+  badgeEl.textContent = label;
+  badgeEl.className = `text-xs font-semibold px-3 py-1 rounded-full mt-2 inline-block ${badgeClass}`;
+
+  document.getElementById('resultScoreRisk').textContent = totalRiskScore;
+  document.getElementById('resultScoreMax').textContent = totalSubstantiveMaxWeight;
+  document.getElementById('resultDataQuality').textContent = `${substantiveCount} / 103`;
+  document.getElementById('resultDataQualitySub').textContent = isDataValid ? 'Status: Data Cukup (≥80%)' : 'Status: Data Kurang (<80%)';
+
+  document.getElementById('resultMeaningText').textContent = meaning;
+  document.getElementById('resultActionText').textContent = action;
+
+  const domainContainer = document.getElementById('domainBreakdownContainer');
+  domainContainer.innerHTML = SECTIONS.map(s => {
+    const d = domainStats[s.code];
+    const dPct = d.maxWeight > 0 ? ((d.riskScore / d.maxWeight) * 100).toFixed(1) : '0.0';
+    
+    return `
+      <div class="p-4 rounded-xl bg-[var(--paper-2)] border border-[var(--line)]">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-bold text-xs text-[var(--ink)]">${d.title}</span>
+          <span class="font-mono text-xs font-bold text-[var(--gold)]">${dPct}%</span>
+        </div>
+        <div class="w-full bg-black/10 rounded-full h-2 overflow-hidden mb-2">
+          <div class="bg-[var(--gold)] h-full" style="width: ${dPct}%"></div>
+        </div>
+        <div class="flex justify-between text-[11px] text-[var(--muted)] font-mono">
+          <span>Skor: ${d.riskScore} / ${d.maxWeight}</span>
+          <span>Items: ${d.count}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const resSection = document.getElementById('resultsSection');
+  resSection.classList.remove('hidden');
+  resSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
