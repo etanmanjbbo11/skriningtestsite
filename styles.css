@@ -86,14 +86,14 @@
     transform: translateY(-1px);
   }
   .option-btn.selected-ya {
-    background: #0648b3;
+    background: #dd9c47;
     color: #ffffff;
-    border-color: #002c73;
+    border-color: #855920;
   }
   .option-btn.selected-tidak {
-    background: #0648b3;
+    background: #dd9c47;
     color: #ffffff;
-    border-color: #002c73;
+    border-color: #855920;
   }
   .option-btn.selected-neutral {
     background: var(--deep);
